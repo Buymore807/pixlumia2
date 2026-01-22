@@ -60,19 +60,23 @@ const ServiceImpressionBanner: React.FC<ServiceImpressionBannerProps> = ({ onAct
         </div>
 
         <div className="relative hidden lg:block">
-          <div className="aspect-[4/3] rounded-[2rem] overflow-hidden border border-white/10 rotate-3 shadow-2xl">
+          <div className="aspect-[4/3] rounded-[2rem] overflow-hidden border border-white/10 rotate-3 shadow-2xl bg-slate-800">
             <img 
               src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?q=80&w=1200&auto=format&fit=crop" 
               className="w-full h-full object-cover" 
-              alt="Impression d'Art"
+              alt=""
+              loading="lazy"
             />
             <div className="absolute inset-0 bg-black/20"></div>
           </div>
-          <div className="absolute -bottom-8 -left-8 aspect-[3/4] w-48 rounded-2xl overflow-hidden border border-white/10 -rotate-6 shadow-2xl">
+          {/* Correction ici : Utilisation d'une image plus stable et alt vide pour éviter le texte en cas d'erreur */}
+          <div className="absolute -bottom-8 -left-8 aspect-[3/4] w-48 rounded-2xl overflow-hidden border border-white/10 -rotate-6 shadow-2xl bg-slate-800">
             <img 
-              src="https://images.unsplash.com/photo-1554147090-e11d13544e48?q=80&w=800&auto=format&fit=crop" 
+              src="https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?q=80&w=800&auto=format&fit=crop" 
               className="w-full h-full object-cover" 
-              alt="Detail Impression"
+              alt=""
+              loading="lazy"
+              onError={(e) => (e.currentTarget.style.display = 'none')}
             />
           </div>
         </div>
