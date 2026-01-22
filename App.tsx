@@ -13,6 +13,7 @@ import Auth from './components/Auth.tsx';
 import CustomerArea from './components/CustomerArea.tsx';
 import AIAssistant from './components/AIAssistant.tsx';
 import ShippingTrust from './components/ShippingTrust.tsx';
+import AdminLogin from './components/AdminLogin.tsx';
 
 type Page = 'home' | 'custom-print' | 'account';
 
@@ -63,8 +64,23 @@ const App: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isAdminMode, setIsAdminMode] = useState(false);
+  const [isAdminAuthOpen, setIsAdminAuthOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isAIOpen, setIsAIOpen] = useState(false);
+
+  // GESTION DE LA ROUTE SECRÈTE
+  useEffect(() => {
+    const checkPath = () => {
+      // Si l'URL contient /admin-lock, on ouvre le login admin
+      if (window.location.pathname === '/admin-lock') {
+        setIsAdminAuthOpen(true);
+      }
+    };
+
+    checkPath();
+    window.addEventListener('popstate', checkPath);
+    return () => window.removeEventListener('popstate', checkPath);
+  }, []);
 
   useEffect(() => {
     localStorage.setItem('pixlumia_products', JSON.stringify(products));
@@ -168,14 +184,25 @@ const App: React.FC = () => {
     setActivePage('home');
   };
 
+  const handleAdminSuccess = () => {
+    setIsAdminAuthOpen(false);
+    setIsAdminMode(true);
+    // On nettoie l'URL sans recharger la page
+    window.history.replaceState({}, '', '/');
+    setActivePage('home'); 
+  };
+
+  const handleAdminClose = () => {
+    setIsAdminAuthOpen(false);
+    window.history.replaceState({}, '', '/');
+  };
+
   if (isAdminMode) {
     return (
       <div className="min-h-screen flex flex-col selection:bg-indigo-500/30">
         <Navbar 
           onCartToggle={() => setIsCartOpen(!isCartOpen)} 
           cartCount={cart.reduce((a, b) => a + b.quantity, 0)} 
-          onAdminToggle={() => setIsAdminMode(!isAdminMode)}
-          isAdminMode={isAdminMode}
           onNavigate={(p) => { setActivePage(p as Page); setIsAdminMode(false); }}
           user={user}
         />
@@ -184,7 +211,7 @@ const App: React.FC = () => {
           onAddProduct={(p) => setProducts(prev => [p, ...prev])} 
           onDeleteProduct={(id) => setProducts(prev => prev.filter(p => p.id !== id))}
           onClose={() => setIsAdminMode(false)}
-          onReset={() => { setProducts(INITIAL_PRODUCTS); setCustomStudioBg(null); }}
+          onReset={() => { if(confirm("Réinitialiser tout le catalogue ?")) { setProducts(INITIAL_PRODUCTS); setCustomStudioBg(null); } }}
           customStudioBg={customStudioBg}
           onUpdateStudioBg={setCustomStudioBg}
         />
@@ -197,8 +224,6 @@ const App: React.FC = () => {
       <Navbar 
         onCartToggle={() => setIsCartOpen(!isCartOpen)} 
         cartCount={cart.reduce((a, b) => a + b.quantity, 0)} 
-        onAdminToggle={() => setIsAdminMode(!isAdminMode)}
-        isAdminMode={isAdminMode}
         onNavigate={setActivePage}
         user={user}
       />
@@ -352,6 +377,12 @@ const App: React.FC = () => {
         isOpen={isAuthModalOpen} 
         onClose={() => setIsAuthModalOpen(false)} 
         onLogin={setUser} 
+      />
+
+      <AdminLogin 
+        isOpen={isAdminAuthOpen} 
+        onClose={handleAdminClose} 
+        onSuccess={handleAdminSuccess} 
       />
 
       <AIAssistant 

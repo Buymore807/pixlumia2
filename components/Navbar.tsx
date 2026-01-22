@@ -5,13 +5,11 @@ import { User } from '../types';
 interface NavbarProps {
   onCartToggle: () => void;
   cartCount: number;
-  onAdminToggle: () => void;
-  isAdminMode: boolean;
   onNavigate: (page: 'home' | 'custom-print' | 'account') => void;
   user: User | null;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ onCartToggle, cartCount, onAdminToggle, isAdminMode, onNavigate, user }) => {
+const Navbar: React.FC<NavbarProps> = ({ onCartToggle, cartCount, onNavigate, user }) => {
   return (
     <nav className="sticky top-0 z-50 glass border-b border-white/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -47,13 +45,6 @@ const Navbar: React.FC<NavbarProps> = ({ onCartToggle, cartCount, onAdminToggle,
             >
               <i className={user ? "fas fa-user-check text-indigo-400" : "fas fa-user"}></i>
               {user ? user.firstName : 'Mon Compte'}
-            </button>
-
-            <button 
-              onClick={onAdminToggle}
-              className={`hidden md:flex items-center gap-2 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${isAdminMode ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}
-            >
-              <i className="fas fa-cog"></i>
             </button>
 
             <button 
