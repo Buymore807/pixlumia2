@@ -2,8 +2,6 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { Product } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
 export interface RecommendationResponse {
   reasoning: string;
   suggestedThemes: string[];
@@ -12,6 +10,9 @@ export interface RecommendationResponse {
 
 export const getPosterRecommendations = async (userPrompt: string, products: Product[]): Promise<RecommendationResponse> => {
   try {
+    // Initialisation dynamique pour éviter les erreurs de chargement global
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || "" });
+    
     // On prépare une liste simplifiée du catalogue pour ne pas saturer le prompt
     const catalogSummary = products.map(p => `- ${p.title} (ID: ${p.id}, Catégorie: ${p.category})`).join('\n');
 
@@ -60,7 +61,7 @@ export const getPosterRecommendations = async (userPrompt: string, products: Pro
   } catch (error) {
     console.error("Gemini Error:", error);
     return {
-      reasoning: "Désolé, je rencontre une petite difficulté. Mais je vous suggère de regarder nos nouveautés !",
+      reasoning: "Désolé, je rencontre une petite difficulté pour vous répondre via mon IA. Mais je vous suggère de regarder nos nouveautés !",
       suggestedThemes: ["Films", "Jeux Vidéo"],
       recommendedProductIds: []
     };
