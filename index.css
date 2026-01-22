@@ -1,0 +1,9 @@
+
+/* Fichier de base pour éviter l'erreur 404 */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}

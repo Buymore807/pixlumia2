@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo, useEffect } from 'react';
 import { PRODUCTS as INITIAL_PRODUCTS } from './constants.tsx';
 import { Product, CartItem, Category, PosterFormat, FORMAT_DETAILS, User, Order } from './types.ts';
@@ -15,7 +16,6 @@ import ShippingTrust from './components/ShippingTrust.tsx';
 
 type Page = 'home' | 'custom-print' | 'account';
 
-// Added missing default export and completed the component logic which was truncated.
 const App: React.FC = () => {
   const [activePage, setActivePage] = useState<Page>('home');
   const [user, setUser] = useState<User | null>(() => {
