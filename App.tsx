@@ -71,13 +71,15 @@ const App: React.FC = () => {
   // GESTION DE LA ROUTE SECRÈTE
   useEffect(() => {
     const checkPath = () => {
-      // Si l'URL contient /admin-lock, on ouvre le login admin
-      if (window.location.pathname === '/admin-lock') {
+      // Normalisation du path pour éviter les problèmes de slash final
+      const path = window.location.pathname.replace(/\/$/, "");
+      if (path === '/admin-lock') {
         setIsAdminAuthOpen(true);
       }
     };
 
     checkPath();
+    // On écoute aussi les changements d'historique
     window.addEventListener('popstate', checkPath);
     return () => window.removeEventListener('popstate', checkPath);
   }, []);
@@ -187,7 +189,6 @@ const App: React.FC = () => {
   const handleAdminSuccess = () => {
     setIsAdminAuthOpen(false);
     setIsAdminMode(true);
-    // On nettoie l'URL sans recharger la page
     window.history.replaceState({}, '', '/');
     setActivePage('home'); 
   };
